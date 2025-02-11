@@ -53,6 +53,7 @@ def switch(emp_type):
         print(f"employee wage is {emp_wage}")  
         
         
+        
 def emp_monthly_wage():
     wage_per_hour = 20
     working_days_in_month = 20
@@ -64,7 +65,40 @@ def emp_monthly_wage():
             total_wage += wage_per_hour * 8
         else:
             total_wage += 0
-    return total_wage                
+    return total_wage     
+
+
+
+def wages_total_working_hours():
+    
+    wage_per_hour = 20
+    max_work_days = 20
+    max_work_hours = 100
+
+    total_wage = 0
+    total_hours = 0
+    total_days = 0
+
+    while total_hours < max_work_hours and total_days < max_work_days:
+        total_days += 1
+        emp_check = check_attendance()
+
+        if emp_check == 1:
+           
+            work_hours = random.choice([8, 4])
+            print(f"Day {total_days}: Employee PRESENT, worked {work_hours} hours.")
+        else:
+            work_hours = 0
+            print(f"Day {total_days}: Employee ABSENT, worked 0 hours.")
+
+        total_hours += work_hours
+        total_wage += work_hours * wage_per_hour
+
+    print(f"\nTotal Wage for {total_days} days and {total_hours} hours: {total_wage}")
+
+
+
+           
                 
 
 if __name__=="__main__":
@@ -77,3 +111,5 @@ if __name__=="__main__":
     
     final_wage=emp_monthly_wage()
     print(f"The total monthly wage for the employee is: {final_wage}")
+    
+    wages_total_working_hours()

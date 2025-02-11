@@ -51,6 +51,20 @@ def switch(emp_type):
     elif emp_type=="PART_TIME":
         emp_wage=daily_wage*part_time_hours  
         print(f"employee wage is {emp_wage}")  
+        
+        
+def emp_monthly_wage():
+    wage_per_hour = 20
+    working_days_in_month = 20
+    total_wage = 0
+    
+    for i in range(working_days_in_month):
+        emp_check = check_attendance()
+        if emp_check == 1:
+            total_wage += wage_per_hour * 8
+        else:
+            total_wage += 0
+    return total_wage                
                 
 
 if __name__=="__main__":
@@ -59,4 +73,7 @@ if __name__=="__main__":
     emp_part_time_wage()
     
     employee_type=input("enter empoyee type(FULL_TIME OR PART_TIME): ")
-    switch(employee_type)        
+    switch(employee_type)       
+    
+    final_wage=emp_monthly_wage()
+    print(f"The total monthly wage for the employee is: {final_wage}")

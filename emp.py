@@ -1,115 +1,114 @@
 import random
 
-print("Welcome to Employee Wage Computation")
 
+PER_HOUR_WAGE = 20
+FULL_DAY_HOURS = 8
+PART_TIME_HOURS = 4
+WORKING_DAYS_PER_MONTH = 20
+MAX_WORK_HOURS = 100
 
-def check_attendance():
-    attendance = random.randint(0, 1)
-    if attendance == 1:
-        print("The employee is present.")
-        return 1
-    else:
-        print("The employee is absent.")
+def get_work_hours():
+    """
+    description: Function returns random work hours (0 for absent, part-time, or full-time).
+    parameters: Function does not take any parameters.
+    return: Returns an integer representing work hours (0, 4, or 8).
+    """
+    try:
+        return random.choice([0, PART_TIME_HOURS, FULL_DAY_HOURS])
+    except Exception as e:
+        print(f"[Error] get_work_hours: {e}")
         return 0
 
+def calculate_daily_wage():
+    """
+    description: Function calculates the daily wage based on randomly assigned work hours.
+    parameters: Function does not take any parameters.
+    return: Returns a tuple (daily wage, attendance status, work hours).
+    """
+    try:
+        work_hours = get_work_hours()
 
+        match work_hours:
+            case 0:
+                daily_wage = 0
+                attendance_status = "Absent"
+            case PART_TIME_HOURS:
+                daily_wage = PER_HOUR_WAGE * PART_TIME_HOURS
+                attendance_status = "Part-time"
+            case FULL_DAY_HOURS:
+                daily_wage = PER_HOUR_WAGE * FULL_DAY_HOURS
+                attendance_status = "Full-time"
+            case _:
+                raise ValueError(f"Unexpected work hours: {work_hours}")
 
-def emp_daily_wage():
-    wage_per_hour = 20
-    emp_check = check_attendance()
-    
-    if emp_check == 1:
-        daily_wage = wage_per_hour * 8
-        print(f"The employee is present for the full day, so the daily wage is: {daily_wage}")
-    else:
-        daily_wage = 0
-        print(f"The employee is absent for the day, so the daily wage is: {daily_wage}")
-        
-        
-        
-def emp_part_time_wage():
-    wage_per_hour = 20
-    emp_check = check_attendance()
-    
-    if emp_check == 1:
-        daily_wage = wage_per_hour * 4
-        print(f"The employee is present for part time, so the daily wage is: {daily_wage}")
-    else:
-        daily_wage = 0
-        print(f"The employee is absent for the day, so the daily wage is: {daily_wage}")        
-        
-        
+        return daily_wage, attendance_status, work_hours
 
-def switch(emp_type):
-    daily_wage=20
-    full_time_hours=8
-    part_time_hours=4
-    
-    if emp_type=="FULL_TIME":
-        emp_wage=daily_wage*full_time_hours
-        print(f"employee wage is {emp_wage}")
-    elif emp_type=="PART_TIME":
-        emp_wage=daily_wage*part_time_hours  
-        print(f"employee wage is {emp_wage}")  
-        
-        
-        
-def emp_monthly_wage():
-    wage_per_hour = 20
-    working_days_in_month = 20
-    total_wage = 0
-    
-    for i in range(working_days_in_month):
-        emp_check = check_attendance()
-        if emp_check == 1:
-            total_wage += wage_per_hour * 8
-        else:
-            total_wage += 0
-    return total_wage     
+    except Exception as e:
+        print(f"[Error] calculate_daily_wage: {e}")
+        return 0, "Error", 0
 
+def calculate_monthly_wage():
+    """
+    description: Function calculates the total monthly wage based on work done over a month.
+    parameters: Function does not take any parameters.
+    return: Returns total monthly wage.
+    """
+    try:
+        total_wage = 0
+        for _ in range(WORKING_DAYS_PER_MONTH):
+            daily_wage, _, _ = calculate_daily_wage()
+            total_wage += daily_wage
+        return total_wage
 
+    except Exception as e:
+        print(f"[Error] calculate_monthly_wage: {e}")
+        return 0
 
-def wages_total_working_hours():
-    
-    wage_per_hour = 20
-    max_work_days = 20
-    max_work_hours = 100
+def calculate_wage_with_condition():
+    """
+    description: Function calculates total wage until either the maximum work hours or the maximum working days condition is met.
+    parameters: Function does not take any parameters.
+    return: Returns a tuple (total wage, total work hours, total working days).
+    """
+    try:
+        total_wage = 0
+        total_work_hours = 0
+        total_working_days = 0
 
-    total_wage = 0
-    total_hours = 0
-    total_days = 0
+        while total_work_hours < MAX_WORK_HOURS and total_working_days < WORKING_DAYS_PER_MONTH:
+            daily_wage, _, work_hours = calculate_daily_wage()
+            total_wage += daily_wage
+            total_work_hours += work_hours
+            total_working_days += 1
 
-    while total_hours < max_work_hours and total_days < max_work_days:
-        total_days += 1
-        emp_check = check_attendance()
+        return total_wage, total_work_hours, total_working_days
 
-        if emp_check == 1:
-           
-            work_hours = random.choice([8, 4])
-            print(f"Day {total_days}: Employee PRESENT, worked {work_hours} hours.")
-        else:
-            work_hours = 0
-            print(f"Day {total_days}: Employee ABSENT, worked 0 hours.")
+    except Exception as e:
+        print(f"[Error] calculate_wage_with_condition: {e}")
+        return 0, 0, 0
 
-        total_hours += work_hours
-        total_wage += work_hours * wage_per_hour
+def main():
+    """
+    description: Main function to execute employee wage computation.
+    parameters: Function does not take any parameters.
+    return: Function does not return anything but prints the computed wages and statistics.
+    """
+    try:
+        print("Welcome to Employee Wage Computation Program")
 
-    print(f"\nTotal Wage for {total_days} days and {total_hours} hours: {total_wage}")
+        daily_wage, attendance_status, _ = calculate_daily_wage()
+        monthly_wage = calculate_monthly_wage()
+        total_wage, total_hours, total_days = calculate_wage_with_condition()
 
+        print(f"Employee is {attendance_status}")
+        print(f"Daily Wage: ₹{daily_wage}")
+        print(f"Total Monthly Wage: ₹{monthly_wage}")
+        print(f"Total Wage till condition met: ₹{total_wage}")
+        print(f"Total Work Hours: {total_hours}")
+        print(f"Total Working Days: {total_days}")
 
+    except Exception as e:
+        print(f"[Error] Unexpected error in program execution: {e}")
 
-           
-                
-
-if __name__=="__main__":
-    check_attendance()
-    emp_daily_wage()
-    emp_part_time_wage()
-    
-    employee_type=input("enter empoyee type(FULL_TIME OR PART_TIME): ")
-    switch(employee_type)       
-    
-    final_wage=emp_monthly_wage()
-    print(f"The total monthly wage for the employee is: {final_wage}")
-    
-    wages_total_working_hours()
+if __name__ == "__main__":
+    main()
